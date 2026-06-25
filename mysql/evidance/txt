@@ -1,0 +1,63 @@
+SELECT * FROM employees where salary > 50000;
+SELECT * FROM employees;
+create view allEmployees as select e.id , e.name , departments.name as department from employees 
+join departments on departments.id = e.department_id where e.salary > 50000;
+CREATE VIEW allEmployees AS
+SELECT
+    e.id,
+    e.name,
+    d.name AS department
+FROM employees e
+JOIN departments d
+    ON d.id = e.department_id
+WHERE e.salary > 50000;
+DESCRIBE employees;
+DESCRIBE departments;
+DROP VIEW IF EXISTS allEmployees;
+
+CREATE VIEW allEmployees AS
+SELECT
+    e.id,
+    e.name,
+    e.salary,
+    departments.name AS department
+FROM employees e
+JOIN departments
+ON departments.id = e.department_id
+WHERE e.salary > 50000;
+SELECT * FROM allEmployees;
+SHOW PROCEDURE STATUS
+WHERE Db = 'db';
+SHOW PROCEDURE STATUS;
+DELIMITER $$
+
+CREATE PROCEDURE createDepartment(
+    IN _name VARCHAR(50),
+    IN _location VARCHAR(100),
+    IN _phone VARCHAR(20)
+)
+BEGIN
+    INSERT INTO departments(name, location, phone)
+    VALUES(_name, _location, _phone);
+END $$
+
+DELIMITER ;
+CALL createDepartment(
+    'IT',
+    'Dhaka',
+    '01711111111'
+);
+DELIMITER $$
+
+CREATE TRIGGER delete_employee_delete_department
+AFTER DELETE
+ON departments
+FOR EACH ROW
+BEGIN
+    DELETE FROM employees
+    WHERE department_id = OLD.id;
+END $$
+
+DELIMITER ;
+DELETE FROM departments WHERE id = 1;
+SET SQL_SAFE_UPDATES = 0;
